@@ -1,47 +1,44 @@
-from turtle import Turtle,Screen
+from turtle import Turtle, Screen
 from paddle import Paddle
-START_CORD1=((-340,0),(-340,20),(-340,40))
-START_CORD2=((340,0),(340,20),(340,40))
+from ball import Ball
+from score import Scoreboard
+import time
 
-screen=Screen()
-screen.bgcolor("white")
-screen.setup(700,500)
-screen.tracer(0)
-paddle=Paddle()
-paddle1=Paddle()
-paddle.create_paddle(330)
-paddle1.create_paddle(-332)
+
+START_CORD1 = ((-340, 0), (-340, 20), (-340, 40))
+START_CORD2 = ((340, 0), (340, 20), (340, 40))
+
+ball = Ball()
+score_l=Scoreboard((-50,220))
+score_r=Scoreboard((50,220))
+screen = Screen()
 screen.listen()
-screen.onkeypress(paddle.move_up,'Up')
-screen.onkeypress(paddle.move_down,'Down')
-screen.onkeypress(paddle1.move_up,'w')
-screen.onkeypress(paddle1.move_down,'s')
-
+screen.bgcolor("black")
+screen.setup(700, 500)
+screen.tracer(0)
+r_paddle = Paddle((330, 0))
+l_paddle = Paddle((-330, 0))
+screen.onkeypress(r_paddle.move_up, 'Up')
+screen.onkeypress(r_paddle.move_down, 'Down')
+screen.onkeypress(l_paddle.move_up, 'w')
+screen.onkeypress(l_paddle.move_down, 's')
 
 while True:
     screen.update()
+    time.sleep(ball.fast)
+    ball.move()
 
+    if ball.ycor() > 235 or ball.ycor() < -235:
+        ball.bounce()
 
+    if (ball.distance(l_paddle) < 50 and ball.xcor() < -310) or (ball.distance(r_paddle) < 50 and ball.xcor() > 310):
+        ball.paddle_bounce()
 
+    if ball.xcor()>360:
+        score_l.score_add()
+        ball.reset()
 
+    if ball.xcor() < -360:
+        score_r.score_add()
+        ball.reset()
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-screen.exitonclick()
